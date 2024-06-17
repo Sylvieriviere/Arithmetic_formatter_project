@@ -1,0 +1,87 @@
+import pytest
+def arithmetic_arranger(problems, show_answers=False):
+    # Invalid input
+    error_messages = [] #collect error messages
+    if len(problems) > 5:
+        return "Error: Too many problems"
+    
+    list_problems = []
+    line_list = []
+    first_line_list = []
+    second_line_list = []
+    result_list = []
+    
+    for element in problems:
+        element_split = element.split()
+        first_number = element_split[0]
+        operator = element_split[1]
+        second_number = element_split[2]
+        
+        # Checks the operator
+        if operator not in ['+', '-']:
+            error_messages.append("Error: Operator must be '+' or '-'")
+            continue 
+        
+        # Checks the number of digits
+        if len(first_number) > 4 or len(second_number) > 4:
+            error_messages.append("Error: Numbers cannot be more than four digits")
+            continue
+        
+        # Checks if the input contains non-digits
+        if any(not char.isdigit() for char in first_number) or any(not char.isdigit() for char in second_number):
+            error_messages.append("Error: Numbers must only contain digits") 
+            continue
+        
+        # Elements of display
+        if len(first_number) >= len(second_number):
+            width = len(first_number) + 2
+            # Space between the second number and the operator if the first number is greater than the second number
+            space_operator = " " * (width - len(second_number) - 1)
+        else:
+            width = len(second_number) + 2
+            # Space between the second number and the operator if the second number is greater than the first number
+            space_operator = " " * 1
+
+        # The line that separates the problem and the solution
+        line = "-" * width
+        # The space between every problem
+        space_problems = " " * 4
+
+        # Solving the operation
+        if operator == '+':
+            result = int(first_number) + int(second_number)
+        if operator == '-':
+            result = int(first_number) - int(second_number)
+
+        first_line = first_number.rjust(width)
+        second_line = (operator + space_operator + second_number).rjust(width)
+        line = line.rjust(width)
+        result = (str(result)).rjust(width)
+
+        first_line_list.append(first_line)
+        second_line_list.append(second_line)
+        line_list.append(line)
+        result_list.append(result)
+    
+    arranged_problems = ""
+
+    for element in first_line_list:
+        arranged_problems += element + '   '
+    arranged_problems += '\n'
+
+    for element in second_line_list:
+        arranged_problems += element + '   '
+    arranged_problems += '\n'
+
+    for element in line_list:
+        arranged_problems += element + '   '
+    arranged_problems += '\n'
+    
+    if show_answers:  # Only add result lines if show_answers is True
+        for element in result_list:
+            arranged_problems += element + '   '
+        arranged_problems = arranged_problems.rstrip()  # Remove trailing whitespace
+        arranged_problems += '\n'  # Add a newline character after the result lines
+
+    print(error_messages)
+    return arranged_problems
